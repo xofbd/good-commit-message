@@ -41,7 +41,22 @@ def validate_body(body):
         if len(line) > LENGTH_BODY:
             return False
 
-    return True
+    # Validate all lists in the body
+    return validate_list(body)
+
+
+def validate_list(body, marker=None):
+    """Return True if a body with a list follows the standard"""
+    if marker is None:
+        marker = body[0][0]
+
+    if not body or body[0] == "\n":
+        return True
+
+    if body[0].startswith(f"{marker} ") or body[0].startswith("  "):
+        return validate_list(body[1:], marker)
+    else:
+        return False
 
 
 def main(path):

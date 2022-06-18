@@ -1,6 +1,8 @@
 import pytest
 
-from gcm.check_commit import load_lines, main, validate_body, validate_header
+from gcm.check_commit import (
+    load_lines, main, validate_body, validate_header, validate_list
+)
 
 
 def test_load_lines(path_good, message_lines_good):
@@ -60,3 +62,20 @@ def test_main(path, status_code, message, capsys, request):
     assert error.type == SystemExit
     assert error.value.code == status_code
     assert capsys.readouterr().err == message
+
+@pytest.mark.parametrize("body,expected", [
+    ("body_with_hyphen_list", True),
+    ("body_with_star_list", True),
+    ("body_with_list_bad_spacing", False),
+    ("body_with_list_bad_indent", False),
+    ("body_with_list_bad_no_blank_line", False)
+])
+def test_validate_list(body, expected, request):
+    """
+    GIVEN the body of a commit message
+    WHEN validate_list is called
+    THEN the correction validation is returned
+    """
+    body = request.getfixturevalue(body)
+
+    assert validate_list(body) == expected
