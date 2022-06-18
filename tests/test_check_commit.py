@@ -8,10 +8,11 @@ from gcm.check_commit import (
 def test_load_lines(path_good, message_lines_good):
     """
     GIVEN a path to a commit message
-    WHEN load_lines is called with the path
+    WHEN load_lines is called with the file handle of that path
     THEN the list of the lines of the commit message is returned
     """
-    assert load_lines(path_good) == message_lines_good
+    with open(path_good, "r") as f:
+        assert load_lines(f) == message_lines_good
 
 
 @pytest.mark.parametrize("header,expected", [
@@ -52,13 +53,14 @@ def test_validate_body(message_lines, expected, body_lines, request):
 def test_main(path, status_code, message, capsys, request):
     """
     GIVEN a path to commit message
-    WHEN the main function is called
+    WHEN the main function is called with the file handle of that path
     THEN the script exists with the correct exit code and output to STDERR
     """
     path = request.getfixturevalue(path)
 
     with pytest.raises(SystemExit) as error:
-        main(path)
+        with open(path, "r") as f:
+            main(f)
 
     assert error.type == SystemExit
     assert error.value.code == status_code

@@ -5,10 +5,9 @@ LENGTH_HEADER = 50
 LENGTH_BODY = 72
 
 
-def load_lines(path):
+def load_lines(f):
     """Return list of lines of commit message"""
-    with open(path, "r") as f:
-        return f.readlines()
+    return f.readlines()
 
 
 def validate_header(header):
@@ -59,8 +58,8 @@ def validate_list(body, marker=None):
         return False
 
 
-def main(path):
-    lines = load_lines(path)
+def main(f):
+    lines = load_lines(f)
     valid_header = validate_header(lines[0])
     valid_body = validate_body(lines[1:])
 
@@ -72,10 +71,16 @@ def main(path):
 
 
 if __name__ == "__main__":
-    from argparse import ArgumentParser
+    from argparse import ArgumentParser, FileType
 
     parser = ArgumentParser(description="Check that commit message follows convention")
-    parser.add_argument("path", type=str, help="path to commit message file")
+    parser.add_argument(
+        "path",
+        type=FileType("r"),
+        help="path to commit message file, defaults to stdin",
+        nargs="?",
+        default=sys.stdin
+    )
     args = parser.parse_args()
 
     main(args.path)
