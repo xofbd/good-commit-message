@@ -46,7 +46,8 @@ def test_validate_body(message_lines, expected, body_lines, request):
 
 
 @pytest.mark.parametrize("path,status_code,message", [
-    ("path_good", 0, ""), ("path_bad", 1, "Commit message did not meet the convention\n")
+    ("path_good", 0, ""),
+    ("path_bad", 1, "Commit message did not meet the convention\n"),
 ])
 def test_main(path, status_code, message, capsys, request):
     """
@@ -63,12 +64,13 @@ def test_main(path, status_code, message, capsys, request):
     assert error.value.code == status_code
     assert capsys.readouterr().err == message
 
+
 @pytest.mark.parametrize("body,expected", [
     ("body_with_hyphen_list", True),
     ("body_with_star_list", True),
     ("body_with_list_bad_spacing", False),
     ("body_with_list_bad_indent", False),
-    ("body_with_list_bad_no_blank_line", False)
+    ("body_with_list_bad_no_blank_line", False),
 ])
 def test_validate_list(body, expected, request):
     """
