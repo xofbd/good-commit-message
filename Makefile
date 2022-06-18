@@ -37,7 +37,7 @@ up-to-date:
 # Testing
 .PHONY: test-lint
 test-lint: | .make.install-dev
-	$(POETRY_RUN) flake8 --config=pyproject.toml gcm
+	$(POETRY_RUN) flake8 --config=pyproject.toml gcm tests
 
 .PHONY: test-unit
 test-unit: | .make.install-dev
