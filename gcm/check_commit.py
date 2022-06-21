@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import re
 import sys
 
 LENGTH_HEADER = 50
@@ -6,8 +7,12 @@ LENGTH_BODY = 72
 
 
 def load_lines(f):
-    """Return list of lines of commit message"""
-    return f.readlines()
+    """Return list of lines of commit message
+
+    The newline character at the end of the line should be removed as it
+    should not count towards the character limit.
+    """
+    return [re.sub(r"\n$", "", line) if line != "\n" else line for line in f]
 
 
 def validate_header(header):
