@@ -148,6 +148,8 @@ def test_alert_errors(test_results, outputs, capsys):
 
     if outputs:
         assert "Commit message was rejected because" in stdout
+        assert "To skip the check, run:" in stdout
+        assert "To recover your previous commit message, run:" in stdout
     else:
         assert not stdout
 

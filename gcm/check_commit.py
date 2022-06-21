@@ -86,12 +86,22 @@ def alert_errors(test_results):
         "body_list": "* Lists in commit body are not formatted properly",
     }
 
-    if not all(test_results.values()):
-        print("Commit message was rejected because:\n", file=sys.stderr)
+    if all(test_results.values()):
+        return
+
+    print("Commit message was rejected because:\n", file=sys.stderr)
 
     for test, result in test_results.items():
         if not result:
             print(error_messages[test], file=sys.stderr)
+
+    print("\nTo skip the check, run:\n     git commit --no-verify", file=sys.stderr)
+    print("To recover your previous commit message, run:", file=sys.stderr)
+    print(
+        "    "
+        "git commit -e --file=$(git rev-parse --git-dir)/COMMIT_EDITMSG",
+        file=sys.stderr
+    )
 
 
 def main(f):
