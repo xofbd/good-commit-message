@@ -101,16 +101,15 @@ def test_validate_list(body, expected, request):
     assert validate_list(body) == expected
 
 
-@pytest.mark.parametrize("path,status_code,message", [
-    ("path_good", 0, ""),
-    ("path_bad", 1, "Commit message was rejected because:"),
+@pytest.mark.parametrize("path,status_code", [
+    ("path_good", 0),
+    ("path_bad", 1),
 ])
-def test_main(path, status_code, message, capsys, request):
+def test_main(path, status_code, capsys, request):
     """
     GIVEN a path to commit message
     WHEN the main function is called with the file handle of that path
-    THEN the script notifies the user if rejected commit and exists with
-         the correct exit code
+    THEN the script exists with the correct exit code
     """
     path = request.getfixturevalue(path)
 
@@ -120,7 +119,6 @@ def test_main(path, status_code, message, capsys, request):
 
     assert error.type == SystemExit
     assert error.value.code == status_code
-    assert message in capsys.readouterr().err
 
 
 @pytest.mark.parametrize(
@@ -149,7 +147,7 @@ def test_alert_errors(test_results, outputs, capsys):
     stdout = capsys.readouterr().err
 
     if outputs:
-        "Commit message did not meet the convention" in stdout
+        assert "Commit message was rejected because" in stdout
     else:
         assert not stdout
 
