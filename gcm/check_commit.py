@@ -112,7 +112,9 @@ def main(f):
 if __name__ == "__main__":
     from argparse import ArgumentParser, FileType
 
-    parser = ArgumentParser(description="Check that commit message follows the standard")
+    parser = ArgumentParser(
+        description="Check that commit message follows the standard"
+    )
     parser.add_argument(
         "path",
         type=FileType("r"),
