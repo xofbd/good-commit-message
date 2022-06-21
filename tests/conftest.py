@@ -24,6 +24,11 @@ def message_lines_good():
         "- We can also support lists\n",
         "- just make sure we have a space between\n",
         "- either a hyphen or asterisk\n",
+        "\n",
+        "Here's another paragraph. We can also have more than one.\n",
+        "\n",
+        "* asterisks are allowed\n",
+        "* for lists\n",
     ]
 
 

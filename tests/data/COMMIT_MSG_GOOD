@@ -6,3 +6,8 @@ make sure we don't go beyond the 72 character limit.
 - We can also support lists
 - just make sure we have a space between
 - either a hyphen or asterisk
+
+Here's another paragraph. We can also have more than one.
+
+* asterisks are allowed
+* for lists

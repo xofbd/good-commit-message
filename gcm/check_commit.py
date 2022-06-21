@@ -11,69 +11,103 @@ def load_lines(f):
 
 
 def validate_header(header):
-    """Return True if header fits the standard"""
-    if header[0].islower():
-        return False
+    """Return dictionary with validation results of header
 
-    if len(header) > LENGTH_HEADER:
-        return False
-
-    if header[-1] == ".":
-        return False
-
-    return True
+    1. The header cannot begin with a lowercase character
+    2. The number of characters cannot exceed the header length limit
+    3. The header cannot end in a period mark
+    """
+    return {
+        "header_capitalization": not header[0].islower(),
+        "header_length": len(header) <= LENGTH_HEADER,
+        "header_punctuation": header[-1] != ".",
+    }
 
 
 def validate_body(body):
-    """Return True if the lines of the body fit the standard"""
-    # The case of no body text
+    """Return dictionary of validation results of body
+
+    1. If the commit message has a body, then a blank line separates the header
+       with the rest of the commit message (the body)
+    2. Each line of the body cannot exceed the body character length limit
+    """
     if not body:
-        return True
+        return {
+            "blank_line": True,
+            "body_lines_length": True,
+        }
 
-    # If the commit message contained a body, then there should be a blank line
-    # separating the header with the rest of the body
-    if body[0] != "\n":
-        return False
-
-    # All lines of the body must be within the length limit
-    for line in body[1:]:
-        if len(line) > LENGTH_BODY:
-            return False
-
-    # Validate all lists in the body
-    return validate_list(body)
+    return {
+        "blank_line": body[0] == "\n",
+        "body_lines_length": all([len(line) <= LENGTH_BODY for line in body[1:]]),
+    }
 
 
 def validate_list(body, marker=None):
-    """Return True if a body with a list follows the standard"""
+    """Return dictionary of validation results of lists in body
+
+    1. lists begin with '* ' or '- '
+    2. list items need a space after the marker
+    3. lists terminate with a blank line
+    """
+    if not body:
+        return {"body_list": True}
+
+    # We have found the beginning of a list
+    if marker is None and (body[0].startswith("* ") or body[0].startswith("- ")):
+        return validate_list(body[1:], marker=body[0][0])
+
+    # Continue finding a list in the body
     if marker is None:
-        marker = body[0][0]
+        return validate_list(body[1:])
 
-    if not body or body[0] == "\n":
-        return True
-
+    # Lists terminate with a new line
     if body[0].startswith(f"{marker} ") or body[0].startswith("  "):
-        return validate_list(body[1:], marker)
+        return validate_list(body[1:], marker=marker)
+    elif body[0] == "\n":
+        return validate_list(body[1:])
     else:
-        return False
+        return {"body_list": False}
+
+
+def alert_errors(test_results):
+    """Send messages of reason for failure to stdout"""
+    error_messages = {
+        "header_capitalization": "* Header should use sentence capitalization",
+        "header_length": f"* Header exceeds {LENGTH_HEADER} characters",
+        "header_punctuation": "* Header ends with a .",
+        "blank_line": "* There is no blank line separating header with commit body",
+        "body_lines_length": f"* Body lines exceed {LENGTH_BODY} characters",
+        "body_list": "* Lists in commit body are not formatted properly",
+    }
+
+    if not all(test_results.values()):
+        print("Commit message was rejected because:\n", file=sys.stderr)
+
+    for test, result in test_results.items():
+        if not result:
+            print(error_messages[test], file=sys.stderr)
 
 
 def main(f):
     lines = load_lines(f)
-    valid_header = validate_header(lines[0])
-    valid_body = validate_body(lines[1:])
+    test_results = {}
 
-    if valid_body and valid_header:
-        sys.exit(0)
-    else:
-        print("Commit message did not meet the convention", file=sys.stderr)
+    test_results.update(validate_header(lines[0]))
+    test_results.update(validate_body(lines[1:]))
+    test_results.update(validate_list(lines[1:]))
+
+    if not all(test_results.values()):
+        alert_errors(test_results)
         sys.exit(1)
+    else:
+        sys.exit(0)
 
 
 if __name__ == "__main__":
     from argparse import ArgumentParser, FileType
 
-    parser = ArgumentParser(description="Check that commit message follows convention")
+    parser = ArgumentParser(description="Check that commit message follows the standard")
     parser.add_argument(
         "path",
         type=FileType("r"),

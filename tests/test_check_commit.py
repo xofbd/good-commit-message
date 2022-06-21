@@ -1,7 +1,7 @@
 import pytest
 
 from gcm.check_commit import (
-    load_lines, main, validate_body, validate_header, validate_list
+    alert_errors, load_lines, main, validate_body, validate_header, validate_list
 )
 
 
@@ -16,11 +16,36 @@ def test_load_lines(path_good, message_lines_good):
 
 
 @pytest.mark.parametrize("header,expected", [
-    ("Fix bug", True),
-    ("fix bug", False),
-    ("Fix bug.", False),
-    ("fix bug.", False),
-    ("Fix a bug and keep on trailing off in the commit header.", False),
+    (
+        "Fix bug", {
+            "header_capitalization": True,
+            "header_length": True,
+            "header_punctuation": True,
+        }),
+    (
+        "fix bug",  {
+            "header_capitalization": False,
+            "header_length": True,
+            "header_punctuation": True,
+        }),
+    (
+        "Fix bug.",  {
+            "header_capitalization": True,
+            "header_length": True,
+            "header_punctuation": False,
+        }),
+    (
+        "fix bug.",  {
+            "header_capitalization": False,
+            "header_length": True,
+            "header_punctuation": False,
+        }),
+    (
+        "Fix a bug and keep on trailing off in the commit header.", {
+            "header_capitalization": True,
+            "header_length": False,
+            "header_punctuation": False
+        }),
 ])
 def test_validate_header(header, expected):
     """
@@ -32,9 +57,21 @@ def test_validate_header(header, expected):
 
 
 @pytest.mark.parametrize("message_lines,expected", [
-    ("message_lines_good", True),
-    ("message_lines_no_blank", False),
-    ("message_lines_exceeds_length", False),
+    (
+        "message_lines_good", {
+            "blank_line": True,
+            "body_lines_length": True,
+        }),
+    (
+        "message_lines_no_blank", {
+            "blank_line": False,
+            "body_lines_length": True,
+        }),
+    (
+        "message_lines_exceeds_length", {
+            "blank_line": True,
+            "body_lines_length": False,
+        }),
 ])
 def test_validate_body(message_lines, expected, body_lines, request):
     """
@@ -46,33 +83,12 @@ def test_validate_body(message_lines, expected, body_lines, request):
     assert validate_body(body_lines(message_lines)) == expected
 
 
-@pytest.mark.parametrize("path,status_code,message", [
-    ("path_good", 0, ""),
-    ("path_bad", 1, "Commit message did not meet the convention\n"),
-])
-def test_main(path, status_code, message, capsys, request):
-    """
-    GIVEN a path to commit message
-    WHEN the main function is called with the file handle of that path
-    THEN the script exists with the correct exit code and output to STDERR
-    """
-    path = request.getfixturevalue(path)
-
-    with pytest.raises(SystemExit) as error:
-        with open(path, "r") as f:
-            main(f)
-
-    assert error.type == SystemExit
-    assert error.value.code == status_code
-    assert capsys.readouterr().err == message
-
-
 @pytest.mark.parametrize("body,expected", [
-    ("body_with_hyphen_list", True),
-    ("body_with_star_list", True),
-    ("body_with_list_bad_spacing", False),
-    ("body_with_list_bad_indent", False),
-    ("body_with_list_bad_no_blank_line", False),
+    ("body_with_hyphen_list", {"body_list": True}),
+    ("body_with_star_list", {"body_list": True}),
+    ("body_with_list_bad_spacing", {"body_list": False}),
+    ("body_with_list_bad_indent", {"body_list": False}),
+    ("body_with_list_bad_no_blank_line", {"body_list": False}),
 ])
 def test_validate_list(body, expected, request):
     """
@@ -83,3 +99,59 @@ def test_validate_list(body, expected, request):
     body = request.getfixturevalue(body)
 
     assert validate_list(body) == expected
+
+
+@pytest.mark.parametrize("path,status_code,message", [
+    ("path_good", 0, ""),
+    ("path_bad", 1, "Commit message was rejected because:"),
+])
+def test_main(path, status_code, message, capsys, request):
+    """
+    GIVEN a path to commit message
+    WHEN the main function is called with the file handle of that path
+    THEN the script notifies the user if rejected commit and exists with
+         the correct exit code
+    """
+    path = request.getfixturevalue(path)
+
+    with pytest.raises(SystemExit) as error:
+        with open(path, "r") as f:
+            main(f)
+
+    assert error.type == SystemExit
+    assert error.value.code == status_code
+    assert message in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "test_results,outputs",
+    [
+        ({"header_capitalization": True, "body_list": True}, []),
+        (
+            {"header_capitalization": True, "body_list": False},
+            ["* Lists in commit body are not formatted properly"]
+        ),
+        (
+            {"header_capitalization": False, "body_list": False},
+            [
+                "* Header should use sentence capitalization",
+                "* Lists in commit body are not formatted properly"
+            ]),
+    ]
+)
+def test_alert_errors(test_results, outputs, capsys):
+    """
+    GIVEN a dictionary of test results
+    WHEN alert_errors is called
+    THEN if a test failed, the appropriate message is sent to stdout
+    """
+    alert_errors(test_results)
+    stdout = capsys.readouterr().err
+
+    if outputs:
+        "Commit message did not meet the convention" in stdout
+    else:
+        assert not stdout
+
+    for output in outputs:
+        assert output in stdout
