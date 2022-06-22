@@ -33,6 +33,7 @@ up-to-date:
 	touch pyproject.toml
 	touch poetry.lock
 	touch requirements-dev.txt
+	touch --no-create .make.install-dev
 
 # Testing
 .PHONY: test-lint
