@@ -105,7 +105,7 @@ def test_validate_list(body, expected, request):
     ("path_good", 0),
     ("path_bad", 1),
 ])
-def test_main(path, status_code, capsys, request):
+def test_main(path, status_code, request):
     """
     GIVEN a path to commit message
     WHEN the main function is called with the file handle of that path
