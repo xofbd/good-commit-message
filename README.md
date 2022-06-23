@@ -1,3 +1,8 @@
+![Python](https://shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10-blue)
+[![GitHub release](https://img.shields.io/github/v/release/xofbd/good-commit-message.svg)](https://github.com/xofbd/good-commit-message.svg/releases)
+[![License: MIT](https://img.shields.io/github/license/xofbd/good-commit-message)](https://opensource.org/licenses/MIT)
+![CI](https://github.com/xofbd/good-commit-message/workflows/CI/badge.svg?branch=master)
+[![codecov](https://codecov.io/gh/xofbd/good-commit-message/branch/master/graph/badge.svg?token=FIAVAEQ60L)](https://codecov.io/gh/xofbd/good-commit-message)
 # Commit Message Linter
 A simple Python script that checks whether a commit's message follows these conventions:
 1. Sentence capitalization of the first line
