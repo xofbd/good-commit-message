@@ -42,7 +42,7 @@ test-lint: | .make.install-dev
 
 .PHONY: test-unit
 test-unit: | .make.install-dev
-	$(POETRY_RUN) pytest -s --cov=gcm
+	$(POETRY_RUN) pytest -s --cov=gcm --cov-report=term --cov-report=xml
 
 .PHONY: tests
 tests: test-lint test-unit

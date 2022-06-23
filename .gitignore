@@ -2,3 +2,4 @@
 .make.*
 .tox
 __pycache__
+coverage.xml
