@@ -53,6 +53,11 @@ def message_lines_exceeds_length():
 
 
 @pytest.fixture
+def message_lines_no_body():
+    return []
+
+
+@pytest.fixture
 def body_lines():
     def message_body(message_lines):
         return message_lines[1:]

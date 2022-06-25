@@ -72,6 +72,11 @@ def test_validate_header(header, expected):
             "blank_line": True,
             "body_lines_length": False,
         }),
+    (
+        "message_lines_no_body", {
+             "blank_line": True,
+             "body_lines_length": True,
+        }),
 ])
 def test_validate_body(message_lines, expected, body_lines, request):
     """
