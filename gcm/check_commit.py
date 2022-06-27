@@ -7,12 +7,16 @@ LENGTH_BODY = 72
 
 
 def load_lines(f):
-    """Return list of lines of commit message
+    """Return list of lines of commit message from file handle
 
     The newline character at the end of the line should be removed as it
     should not count towards the character limit.
     """
-    return [re.sub(r"\n$", "", line) if line != "\n" else line for line in f]
+    return [
+        re.sub(r"\n$", "", line) if line != "\n" else line
+        for line in f
+        if not line.startswith("#")
+    ]
 
 
 def validate_header(header):

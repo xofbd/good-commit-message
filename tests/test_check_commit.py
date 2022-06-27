@@ -5,14 +5,19 @@ from gcm.check_commit import (
 )
 
 
-def test_load_lines(path_good, message_lines_good):
+@pytest.mark.parametrize("file_handle,expected", [
+    ("file_handle_good", "message_lines_good"),
+    ("file_handle_comments", "message_lines_comments"),
+])
+def test_load_lines(file_handle, expected, request):
     """
-    GIVEN a path to a commit message
-    WHEN load_lines is called with the file handle of that path
+    GIVEN a file handle to a commit message
+    WHEN load_lines is called with the file handle of that file handle
     THEN the list of the lines of the commit message is returned
     """
-    with open(path_good, "r") as f:
-        assert load_lines(f) == message_lines_good
+    file_handle = request.getfixturevalue(file_handle)
+    expected = request.getfixturevalue(expected)
+    assert load_lines(file_handle) == expected
 
 
 @pytest.mark.parametrize("header,expected", [

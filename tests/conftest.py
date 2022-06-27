@@ -14,6 +14,18 @@ def path_bad():
 
 
 @pytest.fixture
+def file_handle_good(path_good):
+    with open(path_good, "r") as f:
+        yield f
+
+
+@pytest.fixture
+def file_handle_comments():
+    with open(Path("tests") / "data" / "COMMIT_MSG_COMMENTS", "r") as f:
+        yield f
+
+
+@pytest.fixture
 def message_lines_good():
     return [
         "A good commit message header",
@@ -55,6 +67,11 @@ def message_lines_exceeds_length():
 @pytest.fixture
 def message_lines_no_body():
     return []
+
+
+@pytest.fixture
+def message_lines_comments():
+    return ["Fix typo"]
 
 
 @pytest.fixture
