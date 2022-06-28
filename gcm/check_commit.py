@@ -119,9 +119,9 @@ def check_commit(f):
 
     if not all(test_results.values()):
         alert_errors(test_results)
-        sys.exit(1)
+        return 1
     else:
-        sys.exit(0)
+        return 0
 
 
 def cli():
@@ -137,4 +137,4 @@ def cli():
     )
     args = parser.parse_args()
 
-    check_commit(args.path)
+    return check_commit(args.path)
