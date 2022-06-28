@@ -109,7 +109,7 @@ def alert_errors(test_results):
     )
 
 
-def check_commit(f):
+def check_commit_message(f):
     lines = load_lines(f)
     test_results = {}
 
@@ -137,4 +137,4 @@ def cli():
     )
     args = parser.parse_args()
 
-    return check_commit(args.path)
+    return check_commit_message(args.path)
