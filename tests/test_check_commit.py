@@ -1,8 +1,8 @@
 import pytest
 
-from gcm.check_commit import (
+from gcm.check_commit_message import (
     alert_errors,
-    check_commit,
+    check_commit_message,
     load_lines,
     validate_body,
     validate_header,
@@ -120,16 +120,16 @@ def test_validate_list(body, expected, request):
     ("path_good", 0),
     ("path_bad", 1),
 ])
-def test_check_commit(path, status_code, request):
+def test_check_commit_message(path, status_code, request):
     """
     GIVEN a path to commit message
-    WHEN the check_commit function is called with the file handle of that path
+    WHEN the check_commit_message function is called with the file handle of that path
     THEN the script exists with the correct exit code
     """
     path = request.getfixturevalue(path)
 
     with open(path, "r") as f:
-        assert check_commit(f) == status_code
+        assert check_commit_message(f) == status_code
 
 
 @pytest.mark.parametrize(

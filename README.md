@@ -15,7 +15,7 @@ A simple Python script that checks whether a commit's message follows these conv
 These conventions are common and mostly adapted from [here](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 
 ## Usage
-The linter script is meant to be used as a project's Git hook. Link or place `gcm/check_commit.py` as `.git/hooks/commit-msg` for your project.
+The linter script is meant to be used as a project's Git hook. Link or place `gcm/check_commit_message.py` as `.git/hooks/commit-msg` for your project.
 
 If a commit message is rejected, you'll be informed either how to skip the check or to retrieve the rejected message (Based on https://salferrarello.com/recover-failed-git-commit-message/).
 
