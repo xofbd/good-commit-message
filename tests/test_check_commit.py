@@ -128,12 +128,8 @@ def test_check_commit(path, status_code, request):
     """
     path = request.getfixturevalue(path)
 
-    with pytest.raises(SystemExit) as error:
-        with open(path, "r") as f:
-            check_commit(f)
-
-    assert error.type == SystemExit
-    assert error.value.code == status_code
+    with open(path, "r") as f:
+        assert check_commit(f) == status_code
 
 
 @pytest.mark.parametrize(
