@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from argparse import ArgumentParser, FileType
 import re
 import sys
 
@@ -108,7 +109,7 @@ def alert_errors(test_results):
     )
 
 
-def main(f):
+def check_commit(f):
     lines = load_lines(f)
     test_results = {}
 
@@ -123,9 +124,7 @@ def main(f):
         sys.exit(0)
 
 
-if __name__ == "__main__":
-    from argparse import ArgumentParser, FileType
-
+def cli():
     parser = ArgumentParser(
         description="Check that commit message follows the standard"
     )
@@ -138,4 +137,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    main(args.path)
+    check_commit(args.path)

@@ -1,7 +1,12 @@
 import pytest
 
 from gcm.check_commit import (
-    alert_errors, load_lines, main, validate_body, validate_header, validate_list
+    alert_errors,
+    check_commit,
+    load_lines,
+    validate_body,
+    validate_header,
+    validate_list
 )
 
 
@@ -115,17 +120,17 @@ def test_validate_list(body, expected, request):
     ("path_good", 0),
     ("path_bad", 1),
 ])
-def test_main(path, status_code, request):
+def test_check_commit(path, status_code, request):
     """
     GIVEN a path to commit message
-    WHEN the main function is called with the file handle of that path
+    WHEN the check_commit function is called with the file handle of that path
     THEN the script exists with the correct exit code
     """
     path = request.getfixturevalue(path)
 
     with pytest.raises(SystemExit) as error:
         with open(path, "r") as f:
-            main(f)
+            check_commit(f)
 
     assert error.type == SystemExit
     assert error.value.code == status_code
