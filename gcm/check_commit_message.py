@@ -3,6 +3,8 @@ from argparse import ArgumentParser, FileType
 import re
 import sys
 
+from gcm import __version__
+
 LENGTH_HEADER = 50
 LENGTH_BODY = 72
 
@@ -135,6 +137,7 @@ def cli():
         nargs="?",
         default=sys.stdin
     )
+    parser.add_argument("-V", "--version", action="version", version=__version__)
     args = parser.parse_args()
 
     return check_commit_message(args.path)
