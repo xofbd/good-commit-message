@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gcm"
-version = "0.3.0"
+version = "0.4.0"
 description = "A commit-msg Git hook to enforce good commit messages"
 authors = ["Don B. Fox <dfox09@gmail.com>"]
 license = "MIT"
