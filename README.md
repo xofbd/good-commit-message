@@ -14,10 +14,29 @@ A simple Python script that checks whether a commit's message follows these conv
 
 These conventions are common and mostly adapted from [here](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 
-## Usage
-The linter script is meant to be used as a project's Git hook. Link or place `gcm/check_commit_message.py` as `.git/hooks/commit-msg` for your project.
+## Installation
+This project just uses the Python standard library so no 3rd party packages are required for installation. Thus, there is no need for a tool like [pipx](https://pypa.github.io/pipx/). However, for development work, it does rely on 3rd party packages.
 
-If a commit message is rejected, you'll be informed either how to skip the check or to retrieve the rejected message (Based on https://salferrarello.com/recover-failed-git-commit-message/).
+To install, run:
+```bash
+pip install git+https://github.com/xofbd/good-commit-message
+```
+or
+```
+git clone https://github.com/xofbd/good-commit-message
+pip install good-commit-message
+```
+Note: you can use the `--user` flag for a local installation as opposed to system-wide.
+
+The installation will add `check-commit-message` script but you'll need to link it to your project's `commit-msg`, located in `.git/hooks`. You can follow the script `bin/install-hook` or run it (if you've cloned the repo and have not navigated away):
+```
+good-commit-message/bin/install-hook <path-to-git-project>
+```
+
+If you are already using `commit-msg`, you can just edit that file to call `check-commit-messsage` as part of a larger message checking process.
+
+## Usage
+With the script linked to your projects `commit-msg`, the hooks is run after creating the commit's message. If a commit message is rejected, you'll be informed either how to skip the check or to retrieve the rejected message so you can edit it and try again.
 
 ## License
 This project is distributed under the MIT license. Please see `LICENSE` for more information.
