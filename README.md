@@ -40,7 +40,7 @@ curl https://raw.githubusercontent.com/xofbd/good-commit-message/master/bin/inst
 If you are already using `commit-msg`, you can just edit that file to call `check-commit-messsage` as part of a larger message checking process.
 
 ## Usage
-With the script linked to your projects `commit-msg`, the hooks is run after creating the commit's message. If a commit message is rejected, you'll be informed either how to skip the check or to retrieve the rejected message so you can edit it and try again.
+With the script linked to your project's `commit-msg`, the hook is run after creating the commit's message. If a commit message is rejected, you'll be informed on how to retrieve the rejected message so you can edit it and try again and how to skip the check entirely.
 
 ## License
 This project is distributed under the MIT license. Please see `LICENSE` for more information.
