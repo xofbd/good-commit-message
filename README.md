@@ -19,11 +19,11 @@ This project just uses the Python standard library so no 3rd party packages are 
 
 To install, run:
 ```bash
-pip install git+https://github.com/xofbd/good-commit-message
+pip install git+https://github.com/xofbd/good-commit-message.git
 ```
 or
 ```
-git clone https://github.com/xofbd/good-commit-message
+git clone https://github.com/xofbd/good-commit-message.git
 pip install good-commit-message
 ```
 Note: you can use the `--user` flag for a local installation as opposed to system-wide.
