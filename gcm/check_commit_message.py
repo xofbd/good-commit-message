@@ -7,6 +7,7 @@ from gcm import __version__
 
 LENGTH_HEADER = 50
 LENGTH_BODY = 72
+TAB_SPACE = 4 * " "
 
 
 def load_lines(f):
@@ -102,13 +103,16 @@ def alert_errors(test_results):
         if not result:
             print(error_messages[test], file=sys.stderr)
 
-    print("\nTo skip the check, run:\n     git commit --no-verify", file=sys.stderr)
-    print("To recover your previous commit message, run:", file=sys.stderr)
     print(
-        "    "
-        "git commit -e --file=$(git rev-parse --git-dir)/COMMIT_EDITMSG",
+        "\nTo recover the commit message to edit and try again, run:",
         file=sys.stderr
     )
+    print(
+        TAB_SPACE + "git commit -e --file=$(git rev-parse --git-dir)/COMMIT_EDITMSG",
+        file=sys.stderr
+    )
+    print("\nTo skip the check, use the \"--no-verify\" flag, e.g.:",  file=sys.stderr)
+    print(TAB_SPACE + "git commit --no-verify", file=sys.stderr)
 
 
 def check_commit_message(f):
