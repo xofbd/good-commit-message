@@ -32,6 +32,10 @@ The installation will add `check-commit-message` script but you'll need to link 
 ```
 good-commit-message/bin/install-hook <path-to-git-project>
 ```
+or use `curl` to fetch and run the script:
+```
+curl https://raw.githubusercontent.com/xofbd/good-commit-message/master/bin/install-hook | bash -s <path-to-git-project>
+```
 
 If you are already using `commit-msg`, you can just edit that file to call `check-commit-messsage` as part of a larger message checking process.
 
